@@ -1028,6 +1028,8 @@ _HOP = {"connection","keep-alive","proxy-authenticate","proxy-authorization",
 
 @app.api_route("/proxy/{target_url:path}", methods=["GET","POST","PUT","DELETE","PATCH","HEAD","OPTIONS"])
 async def http_proxy(target_url: str, request: Request):
+        if os.environ.get("HTTP_PROXY_ENABLED", "false").lower() != "true":
+        raise HTTPException(status_code=404, detail="HTTP Proxy disabled")
     if not target_url.startswith("http"):
         target_url = "https://" + target_url
     try:
